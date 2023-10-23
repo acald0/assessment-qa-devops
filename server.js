@@ -1,6 +1,9 @@
+//bugs: "see all bots", "losses" doesn't reset, "losses" is supposed to be wins
+
 const express = require("express");
 const bots = require("./src/botsData");
 const shuffle = require("./src/shuffle");
+
 
 const playerRecord = {
   wins: 0,
@@ -9,6 +12,9 @@ const playerRecord = {
 const app = express();
 
 app.use(express.json());
+
+app.use(express.static(__dirname + '/public'))
+
 
 // Add up the total health of all the robots
 const calculateTotalHealth = (robots) =>
