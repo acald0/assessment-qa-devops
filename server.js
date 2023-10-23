@@ -1,8 +1,19 @@
-//bugs: "see all bots", "losses" doesn't reset, "losses" is supposed to be wins
-
 const express = require("express");
 const bots = require("./src/botsData");
 const shuffle = require("./src/shuffle");
+
+var Rollbar = require('rollbar')
+var rollbar = new Rollbar({
+  accessToken: '68117e5ab7dd4dee9d94fd3c71059878',
+  captureUncaught: true,
+  captureUnhandledRejections: true,
+})
+
+// rollbar.debug()
+// rollbar.warning()
+// rollbar.error()
+// rollbar.info()
+// rollbar.critical()
 
 
 const playerRecord = {
@@ -47,6 +58,7 @@ app.get("/api/robots", (req, res) => {
   } catch (error) {
     console.error("ERROR GETTING BOTS", error);
     res.sendStatus(400);
+    rollbar.error("Error getting bots!")
   }
 });
 
@@ -73,9 +85,11 @@ app.post("/api/duel", (req, res) => {
     if (compHealth > playerHealth) {
       playerRecord.losses += 1;
       res.status(200).send("You lost!");
+      rollbar.info("Player has lost")
     } else {
       playerRecord.losses += 1;
       res.status(200).send("You won!");
+      rollbar.info("Player has won")
     }
   } catch (error) {
     console.log("ERROR DUELING", error);
@@ -89,6 +103,7 @@ app.get("/api/player", (req, res) => {
   } catch (error) {
     console.log("ERROR GETTING PLAYER STATS", error);
     res.sendStatus(400);
+    rollbar.error("Error getting player stats!")
   }
 });
 
